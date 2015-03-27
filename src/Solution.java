@@ -3,8 +3,8 @@ import java.util.*;
 
 /**
  * @author master_j
- * @version 0.4.0
- * @since May 3, 2014
+ * @version 0.4.1
+ * @since Mar 22, 2015
  */
 public class Solution {
     private void solve() throws IOException {
@@ -121,6 +121,7 @@ class IO {
             wln("Note: auto-flush is on.");
     }
 
+    //@formatter:off
     void wln()          {pw.println(); }
     void wln(boolean x) {pw.println(x);}
     void wln(char x)    {pw.println(x);}
@@ -132,11 +133,11 @@ class IO {
     void wln(Object x)  {pw.println(x);}
     void wln(String x)  {pw.println(x);}
 
-    void wf(String f, Object...o){pw.printf(f, o);}
+    void wf(String f, Object... o) {pw.printf(f, o);}
 
     void w(boolean x)   {pw.print(x);}
-    void w(char x)      {pw.print(x);}
-    void w(char x[])    {pw.print(x);}
+    void w(char x) {pw.print(x);}
+    void w(char x[]) {pw.print(x);}
     void w(double x)    {pw.print(x);}
     void w(float x)     {pw.print(x);}
     void w(int x)       {pw.print(x);}
@@ -144,23 +145,40 @@ class IO {
     void w(Object x)    {pw.print(x);}
     void w(String x)    {pw.print(x);}
 
-    int nI() throws IOException    {st.nextToken(); return (int)st.nval;}
+    int nI() throws IOException {st.nextToken(); return (int)st.nval;}
     double nD() throws IOException {st.nextToken(); return st.nval;}
-    float nF() throws IOException  {st.nextToken(); return (float)st.nval;}
+    float nF() throws IOException {st.nextToken(); return (float)st.nval;}
     long nL() throws IOException   {st.nextToken(); return (long)st.nval;}
     String nS() throws IOException {st.nextToken(); return st.sval;}
 
-    void wc(String x){ wc(x.toCharArray()); }
-    void wc(char c1, char c2){for(char c = c1; c<=c2; c++)wc(c);}
-    void wc(char x[]){
-        for(char c : x)
-            wc(c);
+    int[] nIa(int n) throws IOException {
+        int[] a = new int[n];
+        for (int i = 0; i < n; i++)
+            a[i] = nI();
+        return a;
     }
-    void wc(char x){st.ordinaryChar(x); st.wordChars(x, x);}
+    double[] nDa(int n) throws IOException {
+        double[] a = new double[n];
+        for (int i = 0; i < n; i++)
+            a[i] = nD();
+        return a;
+    }
+    String[] nSa(int n) throws IOException {
+        String[] a = new String[n];
+        for (int i = 0; i < n; i++)
+            a[i] = nS();
+        return a;
+    }
+
+    void wc(String x)         {wc(x.toCharArray());}
+    void wc(char c1, char c2) {for (char c = c1; c<=c2; c++) wc(c);}
+    void wc(char x[])         {for (char c : x) wc(c); }
+    void wc(char x)           {st.ordinaryChar(x); st.wordChars(x, x);}
 
     public boolean eof() {return st.ttype == StreamTokenizer.TT_EOF;}
     public boolean eol() {return st.ttype == StreamTokenizer.TT_EOL;}
 
-    void flush(){pw.flush();}
-    void close() throws IOException{reader.close(); br.close(); flush(); pw.close();}
+    void flush() {pw.flush();}
+    void close() throws IOException {reader.close(); br.close(); flush(); pw.close();}
+    //@formatter:on
 }
