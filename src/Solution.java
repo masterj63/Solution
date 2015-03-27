@@ -2,44 +2,113 @@ import java.io.*;
 import java.util.*;
 
 public class Solution {
-    private static IO io;
+    private IO io;
+    private int ioMode = -1;
+    private String problemName = "";
+    private final String mjArgument = "master_j";
 
-    public static void main(String[] args) throws IOException {
-        new Solution().run();
+    public static void main(String programArguments[]) throws IOException {
+        if (programArguments != null && programArguments.length > 0)
+            new Solution().run(programArguments[0]);
+        else
+            new Solution().run(null);
     }
 
-    private void run() throws IOException {//false -> file ; true -> stdio
-        boolean mode = System.getProperty("ONLINE_JUDGE") != null;
-        io = new IO(mode);
-        if (!mode) {
+    private void run(String programArgument) throws IOException {
+//         _______________________________________________ _________
+//        |   Input Mode     |      Output Mode    | mode | comment |
+//        |------------------|---------------------|----- |---------|
+//        |   input.txt      |      System.out     |  0   |    mj   |
+//        |   System.in      |      System.out     |  1   |  T / CF |
+//        |<problemName>.in  |  <problemName>.out  |  2   |         |
+//        |   input.txt      |      output.txt     |  3   |    C    |
+//        |__________________|_____________________|______|_________|
+        if (programArgument != null && programArgument.equals(mjArgument)) // mj
+            ioMode = 0;
+        else if (System.getProperty("ONLINE_JUDGE") != null) // T / CF
+            ioMode = 1;
+        else
+            ioMode = 2;
+        //ioMode = 3;
+
+        switch (ioMode) {
+            case -1:
+                try {
+                    throw new Exception("<ioMode> init failure");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return;
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                if (problemName.length() == 0) {
+                    try {
+                        throw new Exception("<problemName> init failure");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return;
+                }
+            case 3:
+                break;
+        }
+        io = new IO(ioMode, problemName);
+        if (ioMode == 0) {
             System.out.println("File output : \n<start>");
             System.out.flush();
         }
         solve();
         io.flush();
-        if (!mode) {
+        if (ioMode == 0) {
             System.out.println("</start>");
             System.out.flush();
         }
     }
 
     private void solve() throws IOException {
-    }// 2.2250738585072012e-308
+    }//2.2250738585072012e-308
 
     /**
      * Input-output class
      *
      * @author master_j
-     * @version 0.1.0
+     * @version 0.2.0
      */
     @SuppressWarnings("unused")
     private class IO {
         StreamTokenizer in; PrintWriter out; BufferedReader br; Reader reader; Writer writer;
 
-        public IO(boolean oj) throws IOException {
+        public IO(int ioMode, String problemName) throws IOException {
             Locale.setDefault(Locale.US);
-            reader = oj ? new InputStreamReader(System.in) : new FileReader("input.txt");
-            writer = oj ? new OutputStreamWriter(System.out) : new FileWriter("output.txt");
+//         _______________________________________________ _________
+//        |   Input Mode     |      Output Mode    | mode | comment |
+//        |------------------|---------------------|----- |---------|
+//        |   input.txt      |      System.out     |  0   |    mj   |
+//        |   System.in      |      System.out     |  1   |  T / CF |
+//        |<problemName>.in  |  <problemName>.out  |  2   |         |
+//        |   input.txt      |      output.txt     |  3   |    C    |
+//        |__________________|_____________________|______|_________|
+            switch (ioMode) {
+                case 0:
+                    reader = new FileReader("input.txt");
+                    writer = new OutputStreamWriter(System.out);
+                    break;
+                case 1:
+                    reader = new InputStreamReader(System.in);
+                    writer = new OutputStreamWriter(System.out);
+                    break;
+                case 2:
+                    reader = new FileReader(problemName + ".in");
+                    writer = new FileWriter(problemName + ".out");
+                    break;
+                case 3:
+                    reader = new FileReader("input.txt");
+                    writer = new FileWriter("output.txt");
+                    break;
+            }
             br = new BufferedReader(reader);
             in = new StreamTokenizer(br);
             out = new PrintWriter(writer);

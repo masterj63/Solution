@@ -7,3 +7,4 @@ Set run parameters
 - **Name:** `Solution256`
 - **Solution class:** `Solution`
 - **VM options:** `-ea -Xmx256m`
+- **Program arguments:** `master_j`
