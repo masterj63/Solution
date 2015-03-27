@@ -84,10 +84,11 @@ public class Solution {
      * Input-output class
      *
      * @author master_j
-     * @version 0.2.2
+     * @version 0.2.3
      */
     @SuppressWarnings("unused")
     private class IO {
+        private boolean alwaysFlush;
         StreamTokenizer in; PrintWriter out; BufferedReader br; Reader reader; Writer writer;
 
         public IO(int ioMode, String problemName) throws IOException {
@@ -121,33 +122,36 @@ public class Solution {
             br = new BufferedReader(reader);
             in = new StreamTokenizer(br);
             out = new PrintWriter(writer);
+            alwaysFlush = false;
         }
-        public void wln(){out.println();}
-        public void wln(int arg){out.println(arg);}
-        public void wln(long arg){out.println(arg);}
-        public void wln(double arg){out.println(arg);}
-        public void wln(String arg){out.println(arg);}
-        public void wln(boolean arg){out.println(arg);}
-        public void wln(char arg){out.println(arg);}
-        public void wln(float arg){out.println(arg);}
-        public void wln(Object arg){out.println(arg);}
-        public void w(int arg){out.print(arg);}
-        public void w(long arg){out.print(arg);}
-        public void w(double arg){out.print(arg);}
-        public void w(String arg){out.print(arg);}
-        public void w(boolean arg){out.print(arg);}
-        public void w(char arg){out.print(arg);}
-        public void w(float arg){out.print(arg);}
-        public void w(Object arg){out.print(arg);}
-        public void wf(String format, Object...args){out.printf(format, args);}
+        public void setAlwaysFlush(boolean arg){alwaysFlush = arg;}
+        public void wln(){out.println(); if(alwaysFlush)flush();}
+        public void wln(int arg){out.println(arg); if(alwaysFlush)flush();}
+        public void wln(long arg){out.println(arg); if(alwaysFlush)flush();}
+        public void wln(double arg){out.println(arg); if(alwaysFlush)flush();}
+        public void wln(String arg){out.println(arg); if(alwaysFlush)flush();}
+        public void wln(boolean arg){out.println(arg); if(alwaysFlush)flush();}
+        public void wln(char arg){out.println(arg); if(alwaysFlush)flush();}
+        public void wln(float arg){out.println(arg); if(alwaysFlush)flush();}
+        public void wln(Object arg){out.println(arg); if(alwaysFlush)flush();}
+        public void w(int arg){out.print(arg); if(alwaysFlush)flush();}
+        public void w(long arg){out.print(arg); if(alwaysFlush)flush();}
+        public void w(double arg){out.print(arg); if(alwaysFlush)flush();}
+        public void w(String arg){out.print(arg); if(alwaysFlush)flush();}
+        public void w(boolean arg){out.print(arg); if(alwaysFlush)flush();}
+        public void w(char arg){out.print(arg); if(alwaysFlush)flush();}
+        public void w(float arg){out.print(arg); if(alwaysFlush)flush();}
+        public void w(Object arg){out.print(arg); if(alwaysFlush)flush();}
+        public void wf(String format, Object...args){out.printf(format, args); if(alwaysFlush)flush();}
         public void flush(){out.flush();}
         public int nI() throws IOException {in.nextToken(); return(int)in.nval;}
         public long nL() throws IOException {in.nextToken(); return(long)in.nval;}
         public String nS() throws IOException {in.nextToken(); return in.sval;}
         public double nD() throws IOException {in.nextToken(); return in.nval;}
         public float nF() throws IOException {in.nextToken(); return (float)in.nval;}
-        public void wc(char...a){for(char c : a){in.ordinaryChar(c);in.wordChars(c, c);}}
-        public void wc(char c1, char c2){in.ordinaryChars(c1, c2); in.wordChars(c1, c2);}
+        public void wc(char...arg){for(char c : arg){in.ordinaryChar(c);in.wordChars(c, c);}}
+        public void wc(String arg){wc(arg.toCharArray());}
+        public void wc(char arg0, char arg1){in.ordinaryChars(arg0, arg1); in.wordChars(arg0, arg1);}
         public boolean eof(){return in.ttype == StreamTokenizer.TT_EOF;}
         public boolean eol(){return in.ttype == StreamTokenizer.TT_EOL;}
     }
