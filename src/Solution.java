@@ -1,161 +1,158 @@
 import java.io.*;
 import java.util.*;
 
+/**
+ * @author master_j
+ */
 public class Solution {
     private IO io;
-    private int ioMode = -1;
-    private String problemName = "";
-    private final String mjArgument = "master_j";
-
-    public static void main(String programArguments[]) throws IOException {
-        if (programArguments != null && programArguments.length > 0)
-            new Solution().run(programArguments[0]);
-        else
-            new Solution().run(null);
-    }
-
-    private void run(String programArgument) throws IOException {
-//         _______________________________________________ _________
-//        |   Input Mode     |      Output Mode    | mode | comment |
-//        |------------------|---------------------|----- |---------|
-//        |   input.txt      |      System.out     |  0   |    mj   |
-//        |   System.in      |      System.out     |  1   |  T / CF |
-//        |<problemName>.in  |  <problemName>.out  |  2   |         |
-//        |   input.txt      |      output.txt     |  3   |    C    |
-//        |__________________|_____________________|______|_________|
-        long nanoTime = 0;
-        if (programArgument != null && programArgument.equals(mjArgument)) // mj
-            ioMode = 0;
-        else if (System.getProperty("ONLINE_JUDGE") != null) // T / CF
-            ioMode = 1;
-        else
-            ioMode = 2;
-
-        switch (ioMode) {
-            case -1:
-                try {
-                    throw new Exception("<ioMode> init failure");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return;
-            case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                if (problemName.length() == 0) {
-                    try {
-                        throw new Exception("<problemName> init failure");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return;
-                }
-            case 3:
-                break;
-        }
-        io = new IO(ioMode, problemName);
-        if (ioMode == 0) {
-            System.out.println("File output : \n<start>");
-            System.out.flush();
-            nanoTime = System.nanoTime();
-        }
-        solve();
-        io.flush();
-        if (ioMode == 0) {
-            System.out.println("</start>");
-            long t = System.nanoTime() - nanoTime;
-            int d3 = 1000000000, d2 = 1000000, d1 = 1000;
-            if (t >= d3)
-                System.out.println(t / d3 + "." + t % d3 + " seconds");
-            else if (t >= d2)
-                System.out.println(t / d2 + "." + t % d2 + " millis");
-            else if (t >= d1)
-                System.out.println(t / d1 + "." + t % d1 + " micros");
-            else
-                System.out.println(t + " nanos");
-            System.out.flush();
-        }
-    }
+    private static final String _localArg = "master_j";
+    private final String _problemName = "";
+    private final int _inMode = IO.STD_;
+    private final int _outMode = IO.STD_;
+    private final boolean _autoFlush = false;
 
     private void solve() throws IOException {
     }//2.2250738585072012e-308
+
+    private void init(boolean local) throws IOException {
+        if (local)
+            io = new IO(IO._PUT_TXT, IO.STD_);
+        else {
+            if ((_inMode == IO.PROBNAME_ || _outMode == IO.PROBNAME_) && _problemName.length() == 0)
+                throw new IllegalStateException("You imbecile. Where's my <_problemName>?");
+            io = new IO(_inMode, _outMode);
+        }
+
+        long nanoTime = 0;
+        if (local) {
+            nanoTime -= System.nanoTime();
+            if (_autoFlush)
+                io.wln("NOTE: auto-flush is on.");
+            io.wln("<output>");
+            io.flush();
+        }
+
+        solve();
+        io.flush();
+
+        if (local) {
+            io.wln("</output>");
+            nanoTime += System.nanoTime();
+            long d9 = 1000000000, d6 = 1000000, d3 = 1000;
+            if (nanoTime >= d9)
+                io.wf("%d.%d seconds\n", nanoTime / d9, nanoTime % d9);
+            else if (nanoTime >= d6)
+                io.wf("%d.%d millis\n", nanoTime / d6, nanoTime % d6);
+            else if (nanoTime >= d3)
+                io.wf("%d.%d micros\n", nanoTime / d3, nanoTime % d3);
+            else
+                io.wf("%d nanos\n", nanoTime);
+            io.flush();
+        }
+
+        io.close();
+    }
 
     /**
      * Input-output class
      *
      * @author master_j
-     * @version 0.2.5
+     * @version 0.3.2
      */
-    @SuppressWarnings("unused")
     private class IO {
-        private boolean alwaysFlush;
-        StreamTokenizer in; PrintWriter out; BufferedReader br; Reader reader; Writer writer;
+//     _____________________________ _________________
+//    |  mode  |      from/to       |  variable name  |
+//    |--------|--------------------|-----------------|
+//    |    0   |      System.*      |       STD_      |
+//    |    1   |      *put.txt      |     _PUT_TXT    |
+//    |    2   |  <_problemName>.*  |     PROBNAME_   |
+//    |________|____________________|_________________|
+//
 
-        public IO(int ioMode, String problemName) throws IOException {
+        static final int STD_ = 0;
+        static final int _PUT_TXT = 1;
+        static final int PROBNAME_ = 2;
+
+        StreamTokenizer st;
+        BufferedReader br;
+        Reader reader;
+
+        PrintWriter pw;
+        Writer writer;
+
+        IO(int inMode, int outMode) throws IOException {
             Locale.setDefault(Locale.US);
-//         _______________________________________________ _________
-//        |   Input Mode     |      Output Mode    | mode | comment |
-//        |------------------|---------------------|----- |---------|
-//        |   input.txt      |      System.out     |  0   |    mj   |
-//        |   System.in      |      System.out     |  1   |  T / CF |
-//        |<problemName>.in  |  <problemName>.out  |  2   |         |
-//        |   input.txt      |      output.txt     |  3   |    C    |
-//        |__________________|_____________________|______|_________|
-            switch (ioMode) {
-                case 0:
-                    reader = new FileReader("input.txt");
-                    writer = new OutputStreamWriter(System.out);
-                    break;
-                case 1:
-                    reader = new InputStreamReader(System.in);
-                    writer = new OutputStreamWriter(System.out);
-                    break;
-                case 2:
-                    reader = new FileReader(problemName + ".in");
-                    writer = new FileWriter(problemName + ".out");
-                    break;
-                case 3:
-                    reader = new FileReader("input.txt");
-                    writer = new FileWriter("output.txt");
-                    break;
-            }
+
+            if (inMode == IO.STD_)
+                reader = new InputStreamReader(System.in);
+            else if (inMode == IO._PUT_TXT)
+                reader = new FileReader("input.txt");
+            else if (inMode == IO.PROBNAME_)
+                reader = new FileReader(_problemName + ".in");
+            else
+                throw new IllegalStateException("You imbecile. How did you do that?");
+
+            if (outMode == IO.STD_)
+                writer = new OutputStreamWriter(System.out);
+            else if (outMode == IO._PUT_TXT)
+                writer = new FileWriter("output.txt");
+            else if (outMode == IO.PROBNAME_)
+                writer = new FileWriter(_problemName + ".out");
+            else
+                throw new IllegalStateException("You imbecille. Why did you do that?");
+
             br = new BufferedReader(reader);
-            in = new StreamTokenizer(br);
-            out = new PrintWriter(writer);
-            alwaysFlush = false;
+            st = new StreamTokenizer(br);
+
+            pw = new PrintWriter(writer, _autoFlush);
         }
-        public void setAlwaysFlush(boolean arg){alwaysFlush = arg;}
-        public void wln(){out.println(); if(alwaysFlush)flush();}
-        public void wln(int arg){out.println(arg); if(alwaysFlush)flush();}
-        public void wln(long arg){out.println(arg); if(alwaysFlush)flush();}
-        public void wln(double arg){out.println(arg); if(alwaysFlush)flush();}
-        public void wln(String arg){out.println(arg); if(alwaysFlush)flush();}
-        public void wln(boolean arg){out.println(arg); if(alwaysFlush)flush();}
-        public void wln(char arg){out.println(arg); if(alwaysFlush)flush();}
-        public void wln(float arg){out.println(arg); if(alwaysFlush)flush();}
-        public void wln(Object arg){out.println(arg); if(alwaysFlush)flush();}
-        public void w(int arg){out.print(arg); if(alwaysFlush)flush();}
-        public void w(long arg){out.print(arg); if(alwaysFlush)flush();}
-        public void w(double arg){out.print(arg); if(alwaysFlush)flush();}
-        public void w(String arg){out.print(arg); if(alwaysFlush)flush();}
-        public void w(boolean arg){out.print(arg); if(alwaysFlush)flush();}
-        public void w(char arg){out.print(arg); if(alwaysFlush)flush();}
-        public void w(float arg){out.print(arg); if(alwaysFlush)flush();}
-        public void w(Object arg){out.print(arg); if(alwaysFlush)flush();}
-        public void wf(String format, Object...args){out.printf(format, args); if(alwaysFlush)flush();}
-        public void flush(){out.flush();}
-        public int nI() throws IOException {in.nextToken(); return(int)in.nval;}
-        public long nL() throws IOException {in.nextToken(); return(long)in.nval;}
-        public String nS() throws IOException {in.nextToken(); return in.sval;}
-        public double nD() throws IOException {in.nextToken(); return in.nval;}
-        public float nF() throws IOException {in.nextToken(); return (float)in.nval;}
-        public char nC() throws IOException {return (char)br.read();}
-        public void wc(char...arg){for(char c : arg){in.ordinaryChar(c);in.wordChars(c, c);}}
-        public void wc(String arg){wc(arg.toCharArray());}
-        public void wc(char arg0, char arg1){in.ordinaryChars(arg0, arg1); in.wordChars(arg0, arg1);}
-        public boolean eof(){return in.ttype == StreamTokenizer.TT_EOF;}
-        public boolean eol(){return in.ttype == StreamTokenizer.TT_EOL;}
+
+        void wln()          {pw.println(); }
+        void wln(boolean x) {pw.println(x);}
+        void wln(char x)    {pw.println(x);}
+        void wln(char x[])  {pw.println(x);}
+        void wln(double x)  {pw.println(x);}
+        void wln(float x)   {pw.println(x);}
+        void wln(int x)     {pw.println(x);}
+        void wln(long x)    {pw.println(x);}
+        void wln(Object x)  {pw.println(x);}
+        void wln(String x)  {pw.println(x);}
+
+        void wf(String f, Object...o){pw.printf(f, o);}
+
+        void w(boolean x)   {pw.print(x);}
+        void w(char x)      {pw.print(x);}
+        void w(char x[])    {pw.print(x);}
+        void w(double x)    {pw.print(x);}
+        void w(float x)     {pw.print(x);}
+        void w(int x)       {pw.print(x);}
+        void w(long x)      {pw.print(x);}
+        void w(Object x)    {pw.print(x);}
+        void w(String x)    {pw.print(x);}
+
+        int nI() throws IOException    {st.nextToken(); return (int)st.nval;}
+        double nD() throws IOException {st.nextToken(); return st.nval;}
+        float nF() throws IOException  {st.nextToken(); return (float)st.nval;}
+        long nL() throws IOException   {st.nextToken(); return (long)st.nval;}
+        String nS() throws IOException {st.nextToken(); return st.sval;}
+
+        void wc(String x){ wc(x.toCharArray()); }
+        void wc(char c1, char c2){for(char c = c1; c<=c2; c++)wc(c);}
+        void wc(char x[]){
+            for(char c : x)
+                wc(c);
+        }
+        void wc(char x){st.ordinaryChar(x); st.wordChars(x, x);}
+
+        public boolean eof() {return st.ttype == StreamTokenizer.TT_EOF;}
+        public boolean eol() {return st.ttype == StreamTokenizer.TT_EOL;}
+
+        void flush(){pw.flush();}
+        void close() throws IOException{reader.close(); br.close(); flush(); pw.close();}
+    }
+
+    public static void main(final String args[]) throws IOException {
+        new Solution().init(args.length == 1 && args[0].equals(_localArg));
     }
 }
