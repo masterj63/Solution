@@ -23,13 +23,13 @@ public class Solution {
 //        |<problemName>.in  |  <problemName>.out  |  2   |         |
 //        |   input.txt      |      output.txt     |  3   |    C    |
 //        |__________________|_____________________|______|_________|
+        long nanoTime = 0;
         if (programArgument != null && programArgument.equals(mjArgument)) // mj
             ioMode = 0;
         else if (System.getProperty("ONLINE_JUDGE") != null) // T / CF
             ioMode = 1;
         else
             ioMode = 2;
-        //ioMode = 3;
 
         switch (ioMode) {
             case -1:
@@ -59,11 +59,20 @@ public class Solution {
         if (ioMode == 0) {
             System.out.println("File output : \n<start>");
             System.out.flush();
+            nanoTime = System.nanoTime();
         }
         solve();
         io.flush();
         if (ioMode == 0) {
             System.out.println("</start>");
+            long t = System.nanoTime() - nanoTime;
+            int d3 = 1000000000, d2 = 1000000, d1 = 1000000;
+            if (t >= d3)
+                System.out.println(t / d3 + "." + t % d3 + " seconds");
+            else if (t >= d2)
+                System.out.println(t / d2 + "." + t % d2 + " millis");
+            else if (t >= d1)
+                System.out.println(t / d1 + "." + t % d1 + " millis");
             System.out.flush();
         }
     }
@@ -75,7 +84,7 @@ public class Solution {
      * Input-output class
      *
      * @author master_j
-     * @version 0.2.0
+     * @version 0.2.1
      */
     @SuppressWarnings("unused")
     private class IO {
