@@ -84,7 +84,7 @@ public class Solution {
      * Input-output class
      *
      * @author master_j
-     * @version 0.2.3
+     * @version 0.2.4
      */
     @SuppressWarnings("unused")
     private class IO {
@@ -149,6 +149,7 @@ public class Solution {
         public String nS() throws IOException {in.nextToken(); return in.sval;}
         public double nD() throws IOException {in.nextToken(); return in.nval;}
         public float nF() throws IOException {in.nextToken(); return (float)in.nval;}
+        public char nC() throws IOException {return (char)br.read();}
         public void wc(char...arg){for(char c : arg){in.ordinaryChar(c);in.wordChars(c, c);}}
         public void wc(String arg){wc(arg.toCharArray());}
         public void wc(char arg0, char arg1){in.ordinaryChars(arg0, arg1); in.wordChars(arg0, arg1);}
