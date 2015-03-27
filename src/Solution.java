@@ -84,7 +84,7 @@ public class Solution {
      * Input-output class
      *
      * @author master_j
-     * @version 0.2.1
+     * @version 0.2.2
      */
     @SuppressWarnings("unused")
     private class IO {
@@ -148,5 +148,7 @@ public class Solution {
         public float nF() throws IOException {in.nextToken(); return (float)in.nval;}
         public void wc(char...a){for(char c : a){in.ordinaryChar(c);in.wordChars(c, c);}}
         public void wc(char c1, char c2){in.ordinaryChars(c1, c2); in.wordChars(c1, c2);}
+        public boolean eof(){return in.ttype == StreamTokenizer.TT_EOF;}
+        public boolean eol(){return in.ttype == StreamTokenizer.TT_EOL;}
     }
 }
