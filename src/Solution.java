@@ -66,13 +66,15 @@ public class Solution {
         if (ioMode == 0) {
             System.out.println("</start>");
             long t = System.nanoTime() - nanoTime;
-            int d3 = 1000000000, d2 = 1000000, d1 = 1000000;
+            int d3 = 1000000000, d2 = 1000000, d1 = 1000;
             if (t >= d3)
                 System.out.println(t / d3 + "." + t % d3 + " seconds");
             else if (t >= d2)
                 System.out.println(t / d2 + "." + t % d2 + " millis");
             else if (t >= d1)
-                System.out.println(t / d1 + "." + t % d1 + " millis");
+                System.out.println(t / d1 + "." + t % d1 + " micros");
+            else
+                System.out.println(t + " nanos");
             System.out.flush();
         }
     }
@@ -84,7 +86,7 @@ public class Solution {
      * Input-output class
      *
      * @author master_j
-     * @version 0.2.4
+     * @version 0.2.5
      */
     @SuppressWarnings("unused")
     private class IO {
