@@ -8,3 +8,7 @@ Set run parameters
 - **Solution class:** `Solution`
 - **VM options:** `-ea -Xmx256m`
 - **Program arguments:** `master_j`
+
+Set project structure
+
+- **Language level:** `7 -- Diamonds, ARM, multi-catch etc.`
